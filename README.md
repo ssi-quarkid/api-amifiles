@@ -1,51 +1,53 @@
-# API de Gestión de Archivos en Azure Blob Storage
+# File Management API for Azure Blob Storage
 
-Este proyecto proporciona una API para subir y descargar archivos en Azure Blob Storage con soporte para tokens de un solo uso y eliminación automática de archivos.
+This project provides an API for uploading and downloading files to Azure Blob Storage with support for single-use tokens and automatic file deletion.
 
-## Requisitos
+## Requirements
 
 - Docker
 - Docker Compose
 
-## Configuración
+## Configuration
 
-Incluir  las siguientes variables de entorno están definidas correctamente en tu `docker-compose.yml`:
+Ensure the following environment variables are correctly defined in your `docker-compose.yml`:
 
-- `ACCOUNT_NAME`: El nombre de tu cuenta de almacenamiento de Azure.
-- `ACCOUNT_KEY`: La clave de acceso de tu cuenta de almacenamiento de Azure.
-- `BLOB_SERVICE_URL`: La URL del servicio de blobs de tu cuenta de almacenamiento de Azure.
-- `API_SERVICE_URL`: La URL del servicio de la API.
+- `ACCOUNT_NAME`: The name of your Azure storage account.
+- `ACCOUNT_KEY`: The access key for your Azure storage account.
+- `BLOB_SERVICE_URL`: The URL of the blob service for your Azure storage account.
+- `API_SERVICE_URL`: The URL of the API service.
 
-## Uso
+## Usage
 
 ## Endpoints
-### Subir un archivo
+
+### Upload a file
 
 URL: /upload
-Método: POST
-Descripción: Sube un archivo a Azure Blob Storage y devuelve una URL de descarga con un token de un solo uso.
+Method: POST
+Description: Uploads a file to Azure Blob Storage and returns a download URL with a single-use token.
 
-Ejemplo de solicitud:
+Request example:
 
 ```sh
-curl -X POST "{API_SERVICE_URL}/upload" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@ruta/al/archivo"
+curl -X POST "{API_SERVICE_URL}/upload" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/file"
 ```
 
-Respuesta:
+Response:
 
 ```sh
 {
-  "message": "Archivo archivo.pdf subido exitosamente con nombre único <unique_id>.pdf.",
+  "message": "File file.pdf successfully uploaded with unique name <unique_id>.pdf.",
   "download_url": "{API_SERVICE_URL}/download/ami/<unique_id>.pdf?token=<token_id>"
 }
 ```
-###Descargar un archivo
+
+### Download a file
 
 URL: /download/{container_name}/{blob_name}?token={token}
-Método: GET
-Descripción: Descarga un archivo de Azure Blob Storage usando un token de un solo uso. El archivo se elimina después de la descarga.
+Method: GET
+Description: Downloads a file from Azure Blob Storage using a single-use token. The file is deleted after download.
 
-Ejemplo de solicitud:
+Request example:
 
 ```sh
 curl -o "{API_SERVICE_URL}/download/ami/<unique_id>.pdf?token=<token_id>"
